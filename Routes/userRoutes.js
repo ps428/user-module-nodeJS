@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import express from 'express';
 // Importing functionalities of the users from userController file
-import UserController  from '../Controllers/userController.js'
+import UserController from '../Controllers/userController.js';
 // Importing validators
 import * as validator from '../Validators/userValidationSchema.js';
 // const validator = require('../validators/validation_schema')
@@ -11,7 +11,7 @@ import {validatorAction} from '../Validators/validationAction.js';
 // eslint-disable-next-line new-cap
 const userRouter = express.Router();
 
-let userContObj = new UserController();
+const userContObj = new UserController();
 
 
 // Setting the requests
