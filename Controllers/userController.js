@@ -2,16 +2,8 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable max-len */
 
-// bcrypt to encrypt password
-import bcrypt from 'bcryptjs';
-// const bcrypt = require("bcrypt");
-
-// importing jwt
-import jwt from 'jsonwebtoken';
-
 // env config
 import dotenv from 'dotenv';
-// const dotenv = require('dotenv');
 
 /// importing the db functions from dbFunctions directory
 import UserCrud from '../DbFunctions/userCrudFunctions.js'
@@ -19,84 +11,54 @@ import UserCrud from '../DbFunctions/userCrudFunctions.js'
 export default class UserController {
 
   constructor() {
-    // var userDBFunctions = new UserCrud;
+    const passwordDealing = new PasswordHash();
     this.userDBFunctions = new UserCrud;
-    // console.log("userDBFunctions initialized")
-    // console.log(this.userDBFunctions)
     dotenv.config();
     this.dbName = process.env.DBNAME;
     this.saltValue = process.env.saltValue;
   }
 
-  // ---------CREATE USER: DONE
-
-  async createPassword() {
-    const length = 8;
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let retVal = '';
-    for (let i = 0, n = charset.length; i < length; ++i) {
-      retVal += charset.charAt(Math.floor(Math.random() * n));
-    }
-    return retVal;
-  }
 
   async createUser(req, res) {
-    // console.log("create user called")
-    // console.log("userDBFunctions called")
-    // console.log(this);
-    // console.log("==",this.userDBFunctions)
     const userid = req.body.userid;
     const mobile = req.body.mobile;
     const email = req.body.email;
 
     const duplicateCheck = await this.userDBFunctions.getUserDataByParameterDB(`(userid=? OR mobile=? OR email=?)`,[userid, mobile,email]);
-    // console.log(duplicateCheck)
     if (duplicateCheck['success'] == true) {
       return res.status(409).json({ success: false, error: 'User already exists with these details: userid, mobile and email must be unique' });
     }
 
-    // tokenize the password with bcrypt or JWT something, TODO
-    // now we set user password to hashed password
-    const salt = await bcrypt.genSalt(Number(this.saltValue));
 
-    // Auto generation of passsword
-    // eslint-disable-next-line quotes
-    if (req.body.password == "") {
-      req.body.password = await createPassword();
+    // Auto generation of passsword if password is left blank
+    if (req.body.password == '') {
+      req.body.password = await passwordDealing.createPassword();
     }
 
-    req.body.password = bcrypt.hashSync(req.body.password, salt);
-    // console.log(req.body)
-    // how to get username?
-    // eslint-disable-next-line require-jsdoc
+    // Hashing password
+    req.body.password = passwordDealing.hash_password(req.body.password);
+
     try {
       const result = await this.userDBFunctions.addNewUserDB(req.body);
-      // console.log("--",result)
-      // retreving the sent data back from DB
       const user = await this.userDBFunctions.getUserDataByParameterDB(`(userid=?)`,[req.body.userid])
-
       res.json({ success: result.success && user.success, result: result, data: user });
     } catch (e) {
       res.status(400).json({ success: false, error: e });
-
       console.log(`Error in createUser function: ${e}`);
     }
   }
 
-
-  // ---------UPDATE USER: DONE
   async updateUser(req, res) {
     const userid = req.params.id;
 
     const duplicateCheck = await this.userDBFunctions.getUserDataByParameterDB(`(userid=?)`,[userid]);
-    // console.log("--,",duplicateCheck)
+
     if (duplicateCheck['success'] == false) {
       return res.status(404).json({ success: false, error: 'User does not exists' });
     }
 
     try {
       const oldValues = duplicateCheck.values[0];
-      // console.log(oldValues);
       
       if (req.body.name)
         oldValues.name = req.body.name;
@@ -124,11 +86,11 @@ export default class UserController {
       if (req.body.userTypeId) {
         oldValues.user_type_id = req.body.userTypeId
       }
+      
       const jsTime = new Date();
       oldValues.updated_at = jsTime.toISOString().split('T')[0] + ' ' + jsTime.toTimeString().split(' ')[0];
 
       const result = await this.userDBFunctions.updateDataDB(oldValues,"users");
-      // console.log(result)
       return res.json({ success: result.success, msg: result.msg });
     } catch (error) {
       console.warn('ERROR in updateUser function: ' + error);
@@ -136,11 +98,8 @@ export default class UserController {
     }
   }
 
-
-  // ---------DELETE USER: DONE
   async deleteUser(req, res) {
     const userid = req.params.id;
-    // console.log(userid)
 
     // Check if user exists or not before deletion
     const duplicateCheck = await this.userDBFunctions.getUserDataByParameterDB(`userid=?`,[userid]);
@@ -149,7 +108,6 @@ export default class UserController {
     }
     try {
       const result = await this.userDBFunctions.deleteUserDB(userid, 1);
-      // console.log(result)
       if (result.success == true) {
         res.json({ success: true, msg: `Successfully deleted the user.` });
       } else {
@@ -161,8 +119,6 @@ export default class UserController {
     }
   }
 
-
-  // ---------CHANGE PASSWORD:
   async changePassword(req, res) {
     const userid = req.body.userid;
     const password = req.body.password;
@@ -170,7 +126,7 @@ export default class UserController {
     try {
       // Check if user exists or not before updation
       const duplicateCheck = await this.userDBFunctions.getUserDataByParameterDB(`userid=?`,[userid]);
-      // console.log(duplicateCheck)
+
       if (duplicateCheck['success'] == false) {
         return res.status(409).json({ success: false, error: 'User does not exists' });
       }
@@ -186,17 +142,6 @@ export default class UserController {
       }
 
       result = await this.userDBFunctions.updatePasswordDB(userid, newPassword);
-      // res.json(result)
-
-      // -------------- JWT
-      const data = {
-        userID: userid,
-      };
-      const jwtSecretKey = process.env.JWT_SECRET_KEY;
-
-      const token = jwt.sign(data, jwtSecretKey);
-      res.header('auth-token', token);
-
 
       if (result.success)
         return res.json({ success: result.success, msg: `Changed password succesfully` });
@@ -206,8 +151,6 @@ export default class UserController {
     } catch (error) {
       console.log('ERROR in changePassword function: ' + error);
       return res.status(400).json({success: false, msg:"FATAL ERROR! Contact Adminstrator"});
-    }//   await client.close();
-    // }
+    }
   }
-
 }

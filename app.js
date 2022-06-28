@@ -1,7 +1,5 @@
 import { loginRouter } from "./Routes/Userloginroutes.js";
 
-
-
 import express from "express";
 import bodyParser from "body-parser";
 import { config } from "dotenv";
@@ -25,7 +23,6 @@ app.use(cookieParser());
 app.listen(PORT, () => {
     console.log("Server is up and running on localhost:"+ PORT);
 });
-
 
 app.use("/api/userlogin", loginRouter);
 app.use('/api/users', userRouter);
