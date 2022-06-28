@@ -1,0 +1,42 @@
+Create Table users(
+  id int AUTO_INCREMENT,
+  name varchar (150),
+  mobile varchar (15),
+  email varchar (100),
+  picture varchar (50),
+  user_type_id tinyint,
+  userid varchar (100),
+  password varchar (100),
+  created_at timestamp,
+  updated_at timestamp,
+  PRIMARY KEY (id),
+  UNIQUE (userid),
+  UNIQUE(email),
+  UNIQUE(mobile)
+)
+
+ALTER TABLE users CHANGE created_at created_at TIMESTAMP
+ALTER TABLE users CHANGE updated_at updated_at TIMESTAMP
+ALTER TABLE users ADD is_deleted int;
+ALTER TABLE users DROP COLUMN active;
+
+INSERT INTO users (name, mobile, email, picture, user_type_id, userid, password, created_at) VALUES (
+  'Pranav',
+  '8987654335',
+  'email@test.com',
+  'image.jpg',
+  '1',
+  'pranavs',
+  'password',
+  TIMESTAMP("2022-05-23")
+)
+
+
+DATABASE=user_crud
+USERNAME=nodejs
+PASSWORD=mysql
+HOST=localhost
+USER_TABLE=users
+PORT=5000
+SALTVALUE=10
+JWT_SECRET_KEY=asddsadasdasdasfafwqdawdfafasd

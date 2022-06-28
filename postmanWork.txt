@@ -1,0 +1,8 @@
+{
+  "name":"Pranav Soni",
+  "mobile":"+91 8955445432",
+  "email":"ps@test.com",
+  "picture":"a.jpg",
+  "userid":"ps",
+  "password":"password",
+}
