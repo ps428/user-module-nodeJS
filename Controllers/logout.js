@@ -1,17 +1,13 @@
 import SessionClass from "../DbFunctions/new_session.js";
-
 import DbOperation from "db_pkg";
 import UserCrud from "../DbFunctions/userCrudFunctions.js";
 
 let session_function = new SessionClass;
 
-
 export async function logout(req,response) {                                                          //logout
 
     let username = req.body.username;
-   
     let result;
-
     let u_name = username;
 
     const userCrudFunctions = new UserCrud()
@@ -28,9 +24,7 @@ export async function logout(req,response) {                                    
 
     try{
         get_max_id = "select max(id) as maxid from sessions where user_id = ?";
-        
         get_max_id_from_session = await DbOperation.execCustomQuery(get_max_id,fetch_condition);
-     
         returned_max_user_id = get_max_id_from_session[0].maxid;
  
     }
@@ -60,18 +54,12 @@ export async function logout(req,response) {                                    
             };
     }
     catch(error){
-        console.log("updating error"+error);
         result = {
             success: false,
             message:"session update failed."
             };
     }
 
-    
     response.status(200).json(result);
 
-    
-
 }
-
-//module.exports = logout;

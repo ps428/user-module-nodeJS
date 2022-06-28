@@ -1,21 +1,15 @@
 /* eslint-disable no-unused-vars */
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
-// import { config } from "dotenv";
-
-// config();
-
-
 
 export const checkAccessToken = async (req,res,next) => {
   
 
   const token = req.cookies["accesstoken"];
-  console.log("access token @home "+token);
   let userData;
 
   if (token) {
-// verifies secret and checks exp
+// verifies secret and checks expiry
   const decodeAccessToken = jwt.verify(token, process.env.TOKEN_KEY, function(err, decoded) {
   userData = decodeAccessToken;     
   if (err) {

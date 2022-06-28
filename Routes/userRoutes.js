@@ -8,17 +8,11 @@ import * as validator from '../Validators/userValidationSchema.js';
 import {validatorAction} from '../Validators/validationAction.js';
 // import {auth} from '../middlewares/auth.js';
 
-// const express = require('express')
 // eslint-disable-next-line new-cap
 const userRouter = express.Router();
 
-// console.log("controller start");
 let userContObj = new UserController();
-// console.log("controller end");
 
-// const user = require('../controllers/userController')
-
-// const validatorAction = require('../validators/validation_action')
 
 // Setting the requests
 userRouter.post('/', validator.createUserValidation, validatorAction, userContObj.createUser.bind(userContObj));
@@ -26,7 +20,5 @@ userRouter.put('/:id', validator.updateUserValidation, validatorAction, userCont
 userRouter.post('/changepassword', validator.changePasswordValidation, validatorAction, userContObj.changePassword.bind(userContObj));
 userRouter.delete('/:id', validator.deleteValidation, validatorAction, userContObj.deleteUser.bind(userContObj));
 
-// // for testing
-// userRouter.get('/userData/:id', auth, user.getUserData);
 
 export {userRouter};

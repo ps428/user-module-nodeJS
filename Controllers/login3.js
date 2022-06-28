@@ -4,13 +4,11 @@ import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import DbOperation from "db_pkg";
 
-
 ////.....user defined imports ////
 import SessionClass from "../DbFunctions/new_session.js";
 import Cipher from "../Common_functions/cipher.js";
 import PasswordHash from "../Common_functions/password_hash.js";
 /////
-
 
 let cipher_function = new Cipher;
 let password_hashing_function = new PasswordHash;
@@ -19,7 +17,6 @@ let session_function = new SessionClass;
 
 export async function login(req,response) {                                                          //login function
 
-    
     let message;
     let verify_password;                              
     response.status(200);
@@ -31,16 +28,9 @@ export async function login(req,response) {                                     
     }
 
     let flag_user_exist = 0 ;
-
     let u_name= username;
-    
-    //console.log(process.env);
-
-    //let query_result = {};
     let db_password = "";
-
     let output;
-
     let getUserData;
     
     try{
@@ -77,8 +67,7 @@ export async function login(req,response) {                                     
         ];
 
         response.status(401).json(message);
-       // connection.end();
-        return;
+        
 
     }
 
@@ -116,10 +105,8 @@ export async function login(req,response) {                                     
 
             
             response.cookie("userid",get_user_email);                                                     //saving the userid in cookies
-           // response.cookie('accesstoken',token);                                                        //saving the token in cookies
-           
-            //const inserttoken = await session.insertSession(u_name,refreshToken);
-            const inserttoken = await session_function.insertSession(u_name,refreshToken);
+                    
+            const inserttoken = await session_function.insertSession(u_name,refreshToken);                //create a session entry after successfull login
             console.log(inserttoken);
 
 
@@ -130,10 +117,8 @@ export async function login(req,response) {                                     
             }
         ];
 
-            //let encrypted_msg = encryption_script.encryption_f(JSON.stringify(payload));               //encrypting the payload @server, needs to be decrypt @ client side.
-            let encrypted_msg = cipher_function.encryption_f(JSON.stringify(payload));
-            
-            console.log(encrypted_msg);
+                        
+            let encrypted_msg = cipher_function.encryption_f(JSON.stringify(payload));                                         //encrypting the payload @server, needs to be decrypt @ client side.
             
             response.status(200).json(message);     
             
@@ -161,11 +146,4 @@ export async function login(req,response) {                                     
         ];
         response.status(401).json(message);
     }      
-
-  
-//connection.end();                                                                           //closing the connection
 }
-
-
-
-

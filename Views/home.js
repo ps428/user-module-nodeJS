@@ -1,12 +1,8 @@
-// import { config } from "dotenv"; 
 // eslint-disable-next-line no-unused-vars
 import cookieParser from "cookie-parser";
 import { checkAccessToken } from "../Middleware/accessTokenCheck.js";
 
 
-
-
-// config();
 export function home(req,res){
     
     let message;
@@ -33,9 +29,5 @@ export function home(req,res){
         res.status(401).json(message);
          
     }
-
-    
-
 }
 
-//module.exports = home;

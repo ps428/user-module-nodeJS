@@ -1,17 +1,15 @@
 import nacl from "tweetnacl";
 import util from "tweetnacl-util";
 
-
 const sender = nacl.box.keyPair();
 const receiver = nacl.box.keyPair();
-
 
 export default class Cipher{
     constructor(){
 
     }
 
- encryption_f(plain_text){
+encryption_f(plain_text){
     //sender computes a one time shared key
     const sender_shared_key = nacl.box.before(receiver.publicKey,sender.secretKey);
 
@@ -32,13 +30,6 @@ export default class Cipher{
     return message_in_transit;
 }
 
-
-//encrpted_msg = encryption_f('2CmDxHCEL');
-//console.log(encrpted_msg);
-
-
-
-
 decryption_f(message){
     //Getting Viktoria's shared key
     const receiver_shared_key = nacl.box.before(sender.publicKey,receiver.secretKey);
@@ -50,13 +41,7 @@ decryption_f(message){
     return (util.encodeUTF8(decoded_message));
 
 }
-
 }
-
-//decrypted_msg = decryption_f(encrpted_msg);
-//console.log(decrypted_msg);
-
-
 
 
 
