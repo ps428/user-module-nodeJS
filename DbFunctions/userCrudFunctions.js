@@ -1,14 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-undef */
 import DbOperation from "db_pkg";
-import PasswordHash from '../Common_functions/password_hash';
+import PasswordHash from '../Common_functions/password_hash.js';
 const dbOps = DbOperation;
 
 export default class UserCrud {
   constructor() {
     this.userTable = process.env.USER_TABLE;
     this.saltValue = process.env.saltValue;
-    const passwordDealing = new PasswordHash();
+    this.passwordDealing = new PasswordHash();
   }
 
   async addNewUserDB(userData) {
@@ -133,10 +133,10 @@ export default class UserCrud {
       }
 
       const hashedPassword = result.msg[0].password;
-      const doPasswordsMatch = passwordDealing.verify_password(password, hashedPassword);
+      const doPasswordsMatch = this.passwordDealing.verify_password(password, hashedPassword);
 
       if (doPasswordsMatch) {
-        result = { success: 1, data: results };
+        result = { success: 1, data: doPasswordsMatch };
         console.log('Password matches!');
       }
       else {
@@ -146,7 +146,7 @@ export default class UserCrud {
 
       return result;
     } catch (e) {
-      console.log("Error in passwordCheckDB function: ", error)
+      console.log("Error in passwordCheckDB function: ", e)
       let result = { success: false, data: e.message };
       return result;
     }
@@ -154,7 +154,7 @@ export default class UserCrud {
 
   async updatePasswordDB(userid, newPassword) {
 
-    const TokenizedPasswrod = passwordDealing.hash_password(newPassword);
+    const TokenizedPasswrod = this.passwordDealing.hash_password(newPassword);
     let result = { success: 0, data: '' };
 
     const data = { 'password': TokenizedPasswrod };

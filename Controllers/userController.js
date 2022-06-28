@@ -7,11 +7,12 @@ import dotenv from 'dotenv';
 
 /// importing the db functions from dbFunctions directory
 import UserCrud from '../DbFunctions/userCrudFunctions.js'
+import PasswordHash from '../Common_functions/password_hash.js';
 
 export default class UserController {
 
   constructor() {
-    const passwordDealing = new PasswordHash();
+    this.passwordDealing = new PasswordHash();
     this.userDBFunctions = new UserCrud;
     dotenv.config();
     this.dbName = process.env.DBNAME;
@@ -32,11 +33,11 @@ export default class UserController {
 
     // Auto generation of passsword if password is left blank
     if (req.body.password == '') {
-      req.body.password = await passwordDealing.createPassword();
+      req.body.password = await this.passwordDealing.createPassword();
     }
 
     // Hashing password
-    req.body.password = passwordDealing.hash_password(req.body.password);
+    req.body.password = this.passwordDealing.hash_password(req.body.password);
 
     try {
       const result = await this.userDBFunctions.addNewUserDB(req.body);
