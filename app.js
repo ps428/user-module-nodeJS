@@ -30,13 +30,3 @@ app.listen(PORT, () => {
 app.use("/api/userlogin", loginRouter);
 app.use('/api/users', userRouter);
 
-
-// app.post("/login",urlencodedParser,login);                                            //login page 
-
-// app.get("/home",verifyToken,home);                                                    //home page - success after, JWT check pass
-
-// app.post("/logout",urlencodedParser,logout);                                          //logout page
-
-// app.get("/getdata",urlencodedParser,test_db);
-
-
