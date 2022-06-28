@@ -24,7 +24,7 @@ export default class SessionClass {
     const fetch_condition = [u_name];
 
     try {
-      const get_sql = 'select id from users where email=?';
+      const get_sql = 'select id from users where userid=?';
 
       get_user_id = await DbOperation.execCustomQuery(get_sql, fetch_condition);
 
