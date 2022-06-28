@@ -1,14 +1,11 @@
-import SessionClass from "../DbFunctions/new_session.js";
 import DbOperation from "db_pkg";
 import UserCrud from "../DbFunctions/userCrudFunctions.js";
 
-let session_function = new SessionClass;
 
 export async function logout(req,response) {                                                          //logout
 
     let username = req.body.username;
     let result;
-    let u_name = username;
 
     const userCrudFunctions = new UserCrud()
     let userData = await userCrudFunctions.getUserDataByParameterDB('(email=?)',[username]);

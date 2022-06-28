@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 ////...... system imports ////
 import jwt from "jsonwebtoken";

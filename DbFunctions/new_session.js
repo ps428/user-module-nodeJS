@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import crypto from 'crypto';
 import DbOperation from 'db_pkg';
 
@@ -37,7 +38,6 @@ export default class SessionClass {
     let currentdate;
     currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    const insert_table = 'sessions';
     let flag_insert_success = 0;
 
     const fieldsData = [

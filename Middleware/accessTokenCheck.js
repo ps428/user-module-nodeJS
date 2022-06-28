@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
