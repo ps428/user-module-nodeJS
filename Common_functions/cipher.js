@@ -1,50 +1,47 @@
-import nacl from "tweetnacl";
-import util from "tweetnacl-util";
+/* eslint-disable max-len */
+/* eslint-disable require-jsdoc */
+import nacl from 'tweetnacl';
+import util from 'tweetnacl-util';
 
 const sender = nacl.box.keyPair();
 const receiver = nacl.box.keyPair();
 
-export default class Cipher{
-    constructor(){
+export default class Cipher {
+  constructor() {
 
-    }
+  }
 
-encryption_f(plain_text){
-    //sender computes a one time shared key
-    const sender_shared_key = nacl.box.before(receiver.publicKey,sender.secretKey);
+  encryptionFunction(plainText) {
+    // sender computes a one time shared key
+    const senderSharedKey = nacl.box.before(receiver.publicKey, sender.secretKey);
 
-    //sender also computes a one time code.
-    const one_time_code = nacl.randomBytes(24);
+    // sender also computes a one time code.
+    const oneTimeCode = nacl.randomBytes(24);
 
 
-    //Getting the cipher text
-    const cipher_text = nacl.box.after(
-        util.decodeUTF8(plain_text),
-        one_time_code,
-        sender_shared_key 
+    // Getting the cipher text
+    const cipherText = nacl.box.after(
+        util.decodeUTF8(plainText),
+        oneTimeCode,
+        senderSharedKey,
     );
 
-    //message to be transited.
-    const message_in_transit = {cipher_text,one_time_code};
+    // message to be transited.
+    const messageInTransit = {cipherText, oneTimeCode};
 
-    return message_in_transit;
+    return messageInTransit;
+  }
+
+  decryptionFunction(message) {
+    // Getting Viktoria's shared key
+    const receiverSharedKey = nacl.box.before(sender.publicKey, receiver.secretKey);
+
+    // Get the decoded message
+    const decodedMessage = nacl.box.open.after(message.cipherText, message.oneTimeCode, receiverSharedKey);
+
+    // Get the human readable message
+    return (util.encodeUTF8(decodedMessage));
+  }
 }
-
-decryption_f(message){
-    //Getting Viktoria's shared key
-    const receiver_shared_key = nacl.box.before(sender.publicKey,receiver.secretKey);
-
-    //Get the decoded message
-    let decoded_message = nacl.box.open.after(message.cipher_text,message.one_time_code,receiver_shared_key);
-
-    //Get the human readable message
-    return (util.encodeUTF8(decoded_message));
-
-}
-}
-
-
-
-
 
 

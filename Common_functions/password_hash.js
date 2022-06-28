@@ -1,20 +1,22 @@
-import bcrypt from "bcrypt";
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
+import bcrypt from 'bcrypt';
 
 export default class PasswordHash {
   constructor() {
 
   }
-  
-  //hash the password , this method is for registration
-  hash_password(password) {
-    const hashed_passwd = bcrypt.hashSync(password, 10);
-    return hashed_passwd;
+
+  // hash the password , this method is for registration
+  hashPassword(password) {
+    const hashedPasswd = bcrypt.hashSync(password, 10);
+    return hashedPasswd;
   }
 
   // verifiy the password for login
-  verify_password(user_given_password, dbstored_password) {
-    const verify_passwd = bcrypt.compareSync(user_given_password, dbstored_password);
-    return verify_passwd;
+  verifyPassword(userGivenPassword, dbstoredPassword) {
+    const verifyPasswd = bcrypt.compareSync(userGivenPassword, dbstoredPassword);
+    return verifyPasswd;
   }
 
   async createPassword() {

@@ -1,3 +1,5 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
 import DbOperation from 'db_pkg';
 import UserCrud from '../DbFunctions/userCrudFunctions.js';
 
@@ -8,20 +10,20 @@ export async function logout(req, response) { // logout
 
   const userCrudFunctions = new UserCrud();
   const userData = await userCrudFunctions.getUserDataByParameterDB('(userid=?)', [username]);
-  const user_id = userData.values[0].id;
+  const userId = userData.values[0].id;
   const currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
 
-  let get_max_id;
-  let get_max_id_from_session;
-  let returned_max_user_id;
+  let getMaxId;
+  let getMaxIdFromSession;
+  let returnedMaxUserId;
 
-  const fetch_condition = [user_id];
+  const fetchCondition = [userId];
 
   try {
-    get_max_id = 'select max(id) as maxid from sessions where user_id = ?';
-    get_max_id_from_session = await DbOperation.execCustomQuery(get_max_id, fetch_condition);
-    returned_max_user_id = get_max_id_from_session[0].maxid;
+    getMaxId = 'select max(id) as maxid from sessions where user_id = ?';
+    getMaxIdFromSession = await DbOperation.execCustomQuery(getMaxId, fetchCondition);
+    returnedMaxUserId = getMaxIdFromSession[0].maxid;
   } catch (error) {
     console.log('error in fetching max id'+error);
   }
@@ -33,8 +35,8 @@ export async function logout(req, response) { // logout
 
   const condData =
         {
-          'user_id': user_id,
-          'id': returned_max_user_id,
+          'user_id': userId,
+          'id': returnedMaxUserId,
         };
 
 
@@ -45,6 +47,7 @@ export async function logout(req, response) { // logout
       message: 'session ended successfully.',
     };
   } catch (error) {
+    console.log(error);
     result = {
       success: false,
       message: 'session update failed.',

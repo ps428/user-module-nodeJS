@@ -1,3 +1,5 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
 import crypto from 'crypto';
 import DbOperation from 'db_pkg';
@@ -14,31 +16,30 @@ export default class SessionClass {
   async insertSession(username, refreshtoken) {
     let result;
 
-    const u_name = username;
-    const ref_token = refreshtoken;
+    const uName = username;
+    const refToken = refreshtoken;
 
-    const generate_session_id = await generateSessionKey().then(result);
+    const generateSessionId = await generateSessionKey().then(result);
 
-    let get_user_id;
-    let user_id;
-    const fetch_condition = [u_name];
+    let getUserId;
+    let userId;
+    const fetchCondition = [uName];
 
     try {
-      const get_sql = 'select id from users where userid=?';
+      const getSql = 'select id from users where userid=?';
 
-      get_user_id = await DbOperation.execCustomQuery(get_sql, fetch_condition);
+      getUserId = await DbOperation.execCustomQuery(getSql, fetchCondition);
 
-      user_id = get_user_id[0].id;
+      userId = getUserId[0].id;
     } catch (error) {
       //  console.log(error);
       result = {success: false, msg: error};
       return result;
     }
 
-    let currentdate;
-    currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
 
-    let flag_insert_success = 0;
+    let flagInsertSuccess = 0;
 
     const fieldsData = [
       'session_id',
@@ -48,32 +49,32 @@ export default class SessionClass {
     ];
     const valuesData = [
       [
-        generate_session_id,
-        user_id,
+        generateSessionId,
+        userId,
         currentdate,
-        ref_token,
+        refToken,
       ],
     ];
 
 
     try {
       await DbOperation.insertData('sessions', fieldsData, valuesData);
-      flag_insert_success = 1;
+      flagInsertSuccess = 1;
       result = {success: true, msg: 'session inserted'};
     } catch (error) {
       result = {success: false, msg: 'session insertion failed'};
     }
 
-    let get_max_id;
-    let get_max_id_from_session;
-    let returned_max_user_id;
+    let getMaxId;
+    let getMaxIdFromSession;
+    let returnedMaxUserId;
 
-    const fetch_condition1 = [user_id];
+    const fetchCondition1 = [userId];
 
     try {
-      get_max_id = 'select max(id) as maxid from sessions where user_id = ?';
-      get_max_id_from_session = await DbOperation.execCustomQuery(get_max_id, fetch_condition1);
-      returned_max_user_id = get_max_id_from_session[0].maxid;
+      getMaxId = 'select max(id) as maxid from sessions where user_id = ?';
+      getMaxIdFromSession = await DbOperation.execCustomQuery(getMaxId, fetchCondition1);
+      returnedMaxUserId = getMaxIdFromSession[0].maxid;
     } catch (error) {
       console.log(error);
     }
@@ -85,12 +86,12 @@ export default class SessionClass {
 
     const condData =
         {
-          'user_id': user_id,
-          'id': returned_max_user_id-1,
+          'user_id': userId,
+          'id': returnedMaxUserId-1,
         };
 
 
-    if (flag_insert_success == 1) {
+    if (flagInsertSuccess == 1) {
       try {
         await DbOperation.updateData('sessions', updateData, condData);
         result = {
@@ -111,17 +112,17 @@ export default class SessionClass {
 
   async fetchSessiondata(username) {
     let result;
-    let get_session_data;
-    const fetch_condition2= [];
+    let getSessionData;
+    const fetchCondition2= [];
 
     const query = `
     select session_id, token from sessions where id = (select max(id) from sessions) and logout_time is null;`;
 
     try {
-      get_session_data = await DbOperation.execCustomQuery(query, fetch_condition2);
-      result = {success: true, msg: 'query passed', output: get_session_data};
+      getSessionData = await DbOperation.execCustomQuery(query, fetchCondition2);
+      result = {success: true, msg: 'query passed', output: getSessionData};
     } catch (error) {
-      result = {success: false, msg: 'query failed', output: get_session_data};
+      result = {success: false, msg: 'query failed', output: getSessionData};
     }
     return result;
   }

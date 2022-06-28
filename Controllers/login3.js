@@ -1,3 +1,5 @@
+/* eslint-disable require-jsdoc */
+/* eslint-disable max-len */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 // //...... system imports ////
@@ -11,46 +13,47 @@ import Cipher from '../Common_functions/cipher.js';
 import PasswordHash from '../Common_functions/password_hash.js';
 // ///
 
-const cipher_function = new Cipher;
-const password_hashing_function = new PasswordHash;
-const session_function = new SessionClass;
+const cipherFunction = new Cipher;
+const passwordHashingFunction = new PasswordHash;
+const sessionFunction = new SessionClass;
 
 
 export async function login(req, response) { // login function
   let message;
-  let verify_password;
+  let verifyPassword;
   response.status(200);
   const username = req.body.username;
   const password = req.body.password;
 
-  if (!(username && password)) { // check for username and password both are provided
+  // check for username and password both are provided
+  if (!(username && password)) {
     response.status(500).send('Please enter username and password');
   }
 
-  let flag_user_exist = 0;
-  const u_name= username;
-  let db_password = '';
+  let flagUserExist = 0;
+  const uName= username;
+  let dbPassword = '';
   let output;
   let getUserData;
 
   try {
-    const fetch_values = [u_name];
+    const fetchValues = [uName];
 
     const sql = 'select * from users where userid= ?';
 
-    getUserData = await DbOperation.execCustomQuery(sql, fetch_values);
+    getUserData = await DbOperation.execCustomQuery(sql, fetchValues);
 
 
-    db_password = getUserData[0].password;
+    dbPassword = getUserData[0].password;
 
 
     if (getUserData.length != 0) {
-      flag_user_exist = 1;
+      flagUserExist = 1;
     }
 
-    verify_password = password_hashing_function.verify_password(password, db_password);
+    verifyPassword=passwordHashingFunction.verifyPassword(password, dbPassword);
 
-    if (verify_password == false) {
+    if (verifyPassword == false) {
       // eslint-disable-next-line no-undef
       throw err;
     }
@@ -64,15 +67,16 @@ export async function login(req, response) { // login function
 
     response.status(401).json(message);
   }
+  // first check username is exist in local parameter/db
+  if (flagUserExist == 1 ) {
+    if (verifyPassword == true) {
+    // fetch username and name from db/local stored
+      const getUserName = getUserData[0].name;
+      const getUserEmail = getUserData[0].email;
 
-  if (flag_user_exist == 1 ) { // first check username is exist in local parameter/db
-    if (verify_password == true) {
-      const get_user_name = getUserData[0].name; // fetch username and name from db/local stored
-      const get_user_email = getUserData[0].email;
-
-
-      const token = jwt.sign( // jwt token creation and storing in user table
-          {user_data: get_user_name, get_user_email}, // payload
+      // jwt token creation and storing in user table
+      const token = jwt.sign(
+          {user_data: getUserName, getUserEmail}, // payload
           process.env.TOKEN_KEY,
           {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
@@ -80,7 +84,7 @@ export async function login(req, response) { // login function
       );
 
       const refreshToken = jwt.sign(
-          {user_data: get_user_name, get_user_email},
+          {user_data: getUserName, getUserEmail},
           process.env.REFRESH_TOKEN_KEY,
           {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
@@ -90,16 +94,17 @@ export async function login(req, response) { // login function
 
       const payload= [ // response payload
         {
-          'name': get_user_name,
-          'email': get_user_email,
+          'name': getUserName,
+          'email': getUserEmail,
           'token': refreshToken,
         },
       ];
 
 
-      response.cookie('userid', get_user_email); // saving the userid in cookies
+      response.cookie('userid', getUserEmail); // saving the userid in cookies
 
-      const inserttoken = await session_function.insertSession(u_name, refreshToken); // create a session entry after successfull login
+      // create a session entry after successfull login
+      const inserttoken=await sessionFunction.insertSession(uName, refreshToken);
       console.log(inserttoken);
 
 
@@ -110,8 +115,8 @@ export async function login(req, response) { // login function
         },
       ];
 
-
-      const encrypted_msg = cipher_function.encryption_f(JSON.stringify(payload)); // encrypting the payload @server, needs to be decrypt @ client side.
+      // encrypting the payload @server, needs to be decrypt @ client side.
+      const encMsg=cipherFunction.encryptionFunction(JSON.stringify(payload));
 
       response.status(200).json(message);
     } else {
