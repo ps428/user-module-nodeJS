@@ -140,6 +140,7 @@ export default class UserCrud {
 
   async updatePasswordDB(userid, newPassword) {
     const TokenizedPasswrod = this.passwordDealing.hashPassword(newPassword);
+    // console.log(TokenizedPasswrod);
     let result = {success: 0, data: ''};
 
     const data = {'password': TokenizedPasswrod};

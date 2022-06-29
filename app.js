@@ -1,9 +1,7 @@
-import {loginRouter} from './Routes/Userloginroutes.js';
-
 import express from 'express';
-import {config} from 'dotenv';
 import cookieParser from 'cookie-parser';
-
+import {config} from 'dotenv';
+import {loginRouter} from './Routes/Userloginroutes.js';
 import {userRouter} from './Routes/userRoutes.js';
 
 config();
