@@ -37,11 +37,9 @@ export async function login(req, response) { // login function
   let getUserData;
 
   try {
-    const fetchValues = [uName];
+    const sql = 'select * from users where userid= ? and is_deleted= 0';
 
-    const sql = 'select * from users where userid= ?';
-
-    getUserData = await DbOperation.execCustomQuery(sql, fetchValues);
+    getUserData = await DbOperation.execCustomQuery(sql, [uName]);
 
 
     dbPassword = getUserData[0].password;
@@ -55,9 +53,10 @@ export async function login(req, response) { // login function
 
     if (verifyPassword == false) {
       // eslint-disable-next-line no-undef
-      throw err;
+      throw error;
     }
   } catch (error) {
+    console.log('login failed');
     message = [
       {
         'success': false,
@@ -65,12 +64,14 @@ export async function login(req, response) { // login function
       },
     ];
 
-    response.status(401).json(message);
+    return response.status(401).json(message);
   }
-  // first check username is exist in local parameter/db
+
+
+  // first check username is exist in db
   if (flagUserExist == 1 ) {
     if (verifyPassword == true) {
-    // fetch username and name from db/local stored
+    // fetch username and name from db
       const getUserName = getUserData[0].name;
       const getUserEmail = getUserData[0].email;
 
@@ -124,9 +125,10 @@ export async function login(req, response) { // login function
         {
           'success': false,
           'message': 'Login failed',
+          'data': '1',
         },
       ];
-      response.clearCookie('userid');
+
       response.status(403).json(message);
     }
   } else {
@@ -134,6 +136,7 @@ export async function login(req, response) { // login function
       {
         'success': false,
         'message': 'login failed',
+        'data': '2',
       },
     ];
     response.status(401).json(message);
