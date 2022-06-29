@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable require-jsdoc */
 /* eslint-disable max-len */
 /* eslint-disable no-unused-vars */
@@ -13,10 +14,21 @@ export default class UserCrud {
     this.passwordDealing = new PasswordHash();
   }
 
-  async addNewUserDB(_userData) {
+  async addNewUserDB(userData) {
+    const name = userData['name'];
+    const mobile = userData['mobile'];
+    const email = userData['email'];
+    const picture = userData.picture?userData.picture:null;
+    const user_type_id = userData.userTypeId?userData.userTypeId:1;
+
+    const userid = userData['userid'];
+    const password = userData['password'];
+    const fields = ['name', 'mobile', 'email', 'picture', 'userid', 'password', 'user_type_id', 'is_deleted'];
+    const values = [[name, mobile, email, picture, userid, password, user_type_id, 0]];
     let result;
 
     try {
+      const response = await dbOps.insertData('users', fields, values);
       result = {success: true, msg: 'Added user successfully'};
     } catch (e) {
       result = {success: false, error: e};
@@ -108,7 +120,7 @@ export default class UserCrud {
       }
 
       const hashedPassword = result.msg[0].password;
-      const doPasswordsMatch = this.passwordDealing.verify_password(password, hashedPassword);
+      const doPasswordsMatch = this.passwordDealing.verifyPassword(password, hashedPassword);
 
       if (doPasswordsMatch) {
         result = {success: 1, data: doPasswordsMatch};
@@ -127,7 +139,7 @@ export default class UserCrud {
   }
 
   async updatePasswordDB(userid, newPassword) {
-    const TokenizedPasswrod = this.passwordDealing.hash_password(newPassword);
+    const TokenizedPasswrod = this.passwordDealing.hashPassword(newPassword);
     let result = {success: 0, data: ''};
 
     const data = {'password': TokenizedPasswrod};
