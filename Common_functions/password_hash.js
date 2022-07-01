@@ -9,14 +9,12 @@ export default class PasswordHash {
 
   // hash the password , this method is for registration
   hashPassword(password) {
-    const hashedPasswd = bcrypt.hashSync(password, 10);
-    return hashedPasswd;
+    return hashedPasswd = bcrypt.hashSync(password, 10);
   }
 
   // verifiy the password for login
   verifyPassword(userGivenPassword, dbstoredPassword) {
-    const verifyPasswd = bcrypt.compareSync(userGivenPassword, dbstoredPassword);
-    return verifyPasswd;
+    return verifyPasswd = bcrypt.compareSync(userGivenPassword, dbstoredPassword);
   }
 
   async createPassword() {
