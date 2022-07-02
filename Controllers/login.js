@@ -106,7 +106,7 @@ export async function login(req, response) { // login function
 
       // create a session entry after successfull login
       const inserttoken=await sessionFunction.insertSession(uName, refreshToken);
-      console.log(inserttoken);
+      // console.log(inserttoken);
 
 
       message = [ // display message - for postman

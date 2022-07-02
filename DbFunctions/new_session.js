@@ -32,7 +32,6 @@ export default class SessionClass {
 
       userId = getUserId[0].id;
     } catch (error) {
-      //  console.log(error);
       result = {success: false, msg: error};
       return result;
     }

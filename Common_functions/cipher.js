@@ -27,7 +27,8 @@ export default class Cipher {
     );
 
     // message to be transited.
-    return messageInTransit = {cipherText, oneTimeCode};
+    const messageInTransit = {cipherText, oneTimeCode};
+    return messageInTransit;
   }
 
   decryptionFunction(message) {

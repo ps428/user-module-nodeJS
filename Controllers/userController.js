@@ -36,7 +36,6 @@ export default class UserController {
 
     // Hashing password
     req.body.password = this.passwordDealing.hashPassword(req.body.password);
-    console.log(req.body.password);
     try {
       const result = await this.userDBFunctions.addNewUserDB(req.body);
       const user = await this.userDBFunctions.getUserDataByParameterDB(`(userid=?)`, [req.body.userid]);

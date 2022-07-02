@@ -124,10 +124,8 @@ export default class UserCrud {
 
       if (doPasswordsMatch) {
         result = {success: 1, data: doPasswordsMatch};
-        console.log('Password matches!');
       } else {
         result = {success: 0, data: 'Wrong credentials!!'};
-        console.log('Password doesn\'t match!');
       }
 
       return result;
