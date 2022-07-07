@@ -36,7 +36,10 @@ export default class SessionClass {
       return result;
     }
 
-    const currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    // const currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    const jsTime = new Date();
+    const currentdate = jsTime.toISOString().split('T')[0] + ' ' + jsTime.toTimeString().split(' ')[0];
+
 
     let flagInsertSuccess = 0;
 
@@ -112,10 +115,24 @@ export default class SessionClass {
   async fetchSessiondata(username) {
     let result;
     let getSessionData;
+    let getUsersID;
     const fetchCondition2= [];
 
+
+    try {
+      const sql = 'select id from users where userid= ? and is_deleted= 0';
+
+      getUsersID = await DbOperation.execCustomQuery(sql, [uName]);
+    } catch (error) {
+
+
+    }
+
+
+    fetchCondition2.push(getUsersID);
+
     const query = `
-    select session_id, token from sessions where id = (select max(id) from sessions) and logout_time is null;`;
+    select session_id, token from sessions where id = (select max(id) from sessions) and logout_time is null and user_id = ? ;`;
 
     try {
       getSessionData = await DbOperation.execCustomQuery(query, fetchCondition2);

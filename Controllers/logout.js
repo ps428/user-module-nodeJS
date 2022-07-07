@@ -11,7 +11,9 @@ export async function logout(req, response) { // logout
   const userCrudFunctions = new UserCrud();
   const userData = await userCrudFunctions.getUserDataByParameterDB('(userid=?)', [username]);
   const userId = userData.values[0].id;
-  const currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  // const currentdate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  const jsTime = new Date();
+  const currentdate = jsTime.toISOString().split('T')[0] + ' ' + jsTime.toTimeString().split(' ')[0];
 
 
   let getMaxId;
