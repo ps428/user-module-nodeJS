@@ -26,7 +26,7 @@ export default class SessionClass {
     const fetchCondition = [uName];
 
     try {
-      const getSql = 'select id from users where userid=?';
+      const getSql = 'select id from users where userid=? and is_deleted= 0';
 
       getUserId = await DbOperation.execCustomQuery(getSql, fetchCondition);
 

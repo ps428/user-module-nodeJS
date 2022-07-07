@@ -41,7 +41,6 @@ export async function login(req, response) { // login function
 
     getUserData = await DbOperation.execCustomQuery(sql, [uName]);
 
-
     dbPassword = getUserData[0].password;
 
 

@@ -59,16 +59,31 @@ export default class UserCrud {
   }
 
   async updateDataDB(userData, _table) {
+    const name = userData['name'];
+    const mobile = userData['mobile'];
+    const email = userData['email'];
+    const picture = userData['picture'];
+    const userTypeId = userData['userTypeId'];
+
+    const jsTime = new Date();
+    userData.updated_at = jsTime.toISOString().split('T')[0] + ' ' + jsTime.toTimeString().split(' ')[0];
+
+    const updatedAt = userData['updatedAt'];
+
     delete userData.id;
     delete userData.username;
     delete userData.created_at;
     delete userData.password;
     delete userData.is_deleted;
 
+    const data = userData;
+    const conditions = {'userid': userData['userid']};
 
+    let results;
     let result;
 
     try {
+      results = await dbOps.updateData('users', data, conditions);
       result = {success: true, msg: 'Updated user successfully'};
     } catch (error) {
       console.log('Error in updareDataDB function: ', error);

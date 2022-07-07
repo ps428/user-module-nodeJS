@@ -89,9 +89,6 @@ export default class UserController {
         oldValues.user_type_id = req.body.userTypeId;
       }
 
-      const jsTime = new Date();
-      oldValues.updated_at = jsTime.toISOString().split('T')[0] + ' ' + jsTime.toTimeString().split(' ')[0];
-
       const result = await this.userDBFunctions.updateDataDB(oldValues, 'users');
       return res.json({success: result.success, msg: result.msg});
     } catch (error) {
