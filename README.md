@@ -1,7 +1,9 @@
 # User Module
 
-## Features
-It is a reusable User Module project made in Node and Express JS with MySQL as supported Database. The project features:
+It is a reusable User Module project made in Node and Express JS with MySQL as supported database.
+
+## Features 
+The project features:
 1. User Authorization middleware with JWT token.
 2. Using bcrypt to encrypt the passwords (completely customizable as per need).
 3. Storing user sessions in a seperate table.
