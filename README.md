@@ -1,29 +1,15 @@
-# UserLogin_Node
+# User Module
 
-reuseable node based componenent for user login provides extensive securty checks with:
-1. Authoerization middleware for restricted access to Api endpoints.
-2. JWT access and refresh token implementation.
-3. session based login & logout. 
+## Features
+It is a reusable User Module project made in Node and Express JS with MySQL as supported Database. The project features:
+1. User Authorization middleware with JWT token.
+2. Using bcrypt to encrypt the passwords (completely customizable as per need).
+3. Storing user sessions in a seperate table.
+4. Allowing user to perform basic CRUD based on privileges.
+5. Secure development ensuring no SQL Injections.
+6. The module is ES6 compatible.
 
-
-Technologies used: 
-
-1. backend  - node.js (ES6 compatible).
-2. frontend  - currently POSTMAN (later can be integrate with any front end tech.)
-3. db - mysql
-
-# dependencies:
-
-1. [Node.js]
-2. [NPM]
-3. [POSTMAN]
-4. [MySql](https://dev.mysql.com/downloads/installer/)
-
-
-
-# Licence:
-[The MIT License(MIT)](https://gist.github.com/bharatchitara/f80e227f05bb099c0c2e63f7246d6acf)
-
-# Note:
-
-* for security purpouse .env file is not added, can to be created by the end-user.
+## TechStack:
+1. Backend: Node JS, Express JS.
+2. Frontend: POSTMAN to test APIs (can use any tech stack as and when needed)
+3. Database: MySQL 
