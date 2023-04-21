@@ -1,5 +1,7 @@
 # User Module
 
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fps428%2Fuser-module-nodeJS&count_bg=%2317DAED&title_bg=%23555555&icon=probot.svg&icon_color=%23E7E7E7&title=Views&edge_flat=false)](https://hits.seeyoufarm.com)
+
 It is a reusable User Module project made in Node and Express JS with MySQL as supported database.
 
 ## Features 
